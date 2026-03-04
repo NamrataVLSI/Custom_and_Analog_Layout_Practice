@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GVim Cheatsheet — Analog Layout Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0f14;
+    --surface: #13161e;
+    --card: #181c26;
+    --border: #252b3b;
+    --accent: #00d4aa;
+    --accent2: #ff6b35;
+    --accent3: #7c6af7;
+    --accent4: #f7c948;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --code-bg: #0a0c11;
+    --green: #4ade80;
+    --red: #f87171;
+    --blue: #60a5fa;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+    padding: 24px;
+  }
+
+  /* HEADER */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-left h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    letter-spacing: 4px;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-left p {
+    color: var(--muted);
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .mode-pills {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-end;
+  }
+
+  .mode-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  .pill-normal { background: #1a2635; border: 1px solid var(--blue); color: var(--blue); }
+  .pill-insert { background: #1a2b1a; border: 1px solid var(--green); color: var(--green); }
+  .pill-visual { background: #2a1a2b; border: 1px solid var(--accent3); color: var(--accent3); }
+  .pill-command { background: #2b231a; border: 1px solid var(--accent2); color: var(--accent2); }
+
+  .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .dot-blue { background: var(--blue); }
+  .dot-green { background: var(--green); }
+  .dot-purple { background: var(--accent3); }
+  .dot-orange { background: var(--accent2); }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .card.span2 { grid-column: span 2; }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .card-body { padding: 10px 14px; }
+
+  /* ROWS */
+  .row {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 6px 10px;
+    align-items: baseline;
+    padding: 3px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+  }
+
+  .row:last-child { border-bottom: none; }
+
+  kbd {
+    display: inline-block;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-bottom: 2px solid #333;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+    line-height: 1.6;
+  }
+
+  kbd.cmd { color: var(--accent2); }
+  kbd.insert { color: var(--green); }
+  kbd.visual { color: var(--accent3); }
+  kbd.yellow { color: var(--accent4); }
+  kbd.blue { color: var(--blue); }
+
+  .desc {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .desc strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* SECTION separators */
+  .subsection {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 6px 0 3px;
+    color: var(--accent);
+    opacity: 0.6;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2px;
+    margin-top: 4px;
+  }
+
+  /* TIP BOX */
+  .tip {
+    background: linear-gradient(135deg, #0f1e1a, #0d1420);
+    border: 1px solid var(--accent);
+    border-left: 3px solid var(--accent);
+    border-radius: 6px;
+    padding: 8px 12px;
+    margin: 8px 0 4px;
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  .tip span { color: var(--muted); }
+
+  /* ACCENT COLORS per category */
+  .cat-motion   .card-icon { background: #0d1f35; color: var(--blue); }
+  .cat-motion   .card-title { color: var(--blue); }
+
+  .cat-edit     .card-icon { background: #1a2b1a; color: var(--green); }
+  .cat-edit     .card-title { color: var(--green); }
+
+  .cat-insert   .card-icon { background: #1a2b1a; color: var(--green); }
+  .cat-insert   .card-title { color: var(--green); }
+
+  .cat-visual   .card-icon { background: #1e1a2b; color: var(--accent3); }
+  .cat-visual   .card-title { color: var(--accent3); }
+
+  .cat-cmd      .card-icon { background: #2b1e14; color: var(--accent2); }
+  .cat-cmd      .card-title { color: var(--accent2); }
+
+  .cat-search   .card-icon { background: #2b2414; color: var(--accent4); }
+  .cat-search   .card-title { color: var(--accent4); }
+
+  .cat-file     .card-icon { background: #1a1a2b; color: #a78bfa); }
+  .cat-file     .card-icon { background: #1a1a2b; color: #a78bfa; }
+  .cat-file     .card-title { color: #a78bfa; }
+
+  .cat-window   .card-icon { background: #1f1a2b; color: var(--accent3); }
+  .cat-window   .card-title { color: var(--accent3); }
+
+  .cat-macro    .card-icon { background: #2b1a1a; color: var(--red); }
+  .cat-macro    .card-title { color: var(--red); }
+
+  .cat-misc     .card-icon { background: #1a2a1a; color: var(--accent); }
+  .cat-misc     .card-title { color: var(--accent); }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 20px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    font-size: 11px;
+  }
+
+  .footer-brand {
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+    font-size: 14px;
+    color: var(--accent);
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: white; color: #111; padding: 10px; font-size: 11px; }
+    .card { border: 1px solid #ddd; break-inside: avoid; }
+    .card-header { background: #f5f5f5; }
+    kbd { background: #f0f0f0; color: #c00; border: 1px solid #ccc; }
+    .desc { color: #555; }
+    .header-left h1 { -webkit-text-fill-color: #0d9; background: none; color: #0a8; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>GVIM CHEATSHEET</h1>
+    <p>Custom Analog Layout Course — Beginner Reference</p>
+  </div>
+  <div class="mode-pills">
+    <div class="mode-pill pill-normal"><span class="dot dot-blue"></span> NORMAL MODE — default, navigation</div>
+    <div class="mode-pill pill-insert"><span class="dot dot-green"></span> INSERT MODE — type text (press i)</div>
+    <div class="mode-pill pill-visual"><span class="dot dot-purple"></span> VISUAL MODE — select text (press v)</div>
+    <div class="mode-pill pill-command"><span class="dot dot-orange"></span> COMMAND MODE — ex commands (press :)</div>
+  </div>
+</div>
+
+<!-- GRID -->
+<div class="grid">
+
+  <!-- ░░ COL 1 ROW 1 — MOTION -->
+  <div class="card cat-motion">
+    <div class="card-header">
+      <div class="card-icon">🧭</div>
+      <div class="card-title">Movement & Navigation</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Basic Movement</div>
+      <div class="row"><kbd>h</kbd><div class="desc">Move <strong>left</strong> one character</div></div>
+      <div class="row"><kbd>l</kbd><div class="desc">Move <strong>right</strong> one character</div></div>
+      <div class="row"><kbd>j</kbd><div class="desc">Move <strong>down</strong> one line</div></div>
+      <div class="row"><kbd>k</kbd><div class="desc">Move <strong>up</strong> one line</div></div>
+      <div class="subsection">Word Motion</div>
+      <div class="row"><kbd>w</kbd><div class="desc">Jump to start of <strong>next word</strong></div></div>
+      <div class="row"><kbd>b</kbd><div class="desc">Jump <strong>back</strong> to start of word</div></div>
+      <div class="row"><kbd>e</kbd><div class="desc">Jump to <strong>end</strong> of current word</div></div>
+      <div class="row"><kbd>W</kbd><div class="desc">Next WORD (whitespace-delimited)</div></div>
+      <div class="row"><kbd>B</kbd><div class="desc">Back WORD (whitespace-delimited)</div></div>
+      <div class="subsection">Line Motion</div>
+      <div class="row"><kbd>0</kbd><div class="desc">Start of line (column 0)</div></div>
+      <div class="row"><kbd>^</kbd><div class="desc">First <strong>non-blank</strong> character</div></div>
+      <div class="row"><kbd>$</kbd><div class="desc">End of line</div></div>
+      <div class="row"><kbd>g_</kbd><div class="desc">Last non-blank character</div></div>
+      <div class="subsection">File Navigation</div>
+      <div class="row"><kbd>gg</kbd><div class="desc">Go to <strong>first line</strong> of file</div></div>
+      <div class="row"><kbd>G</kbd><div class="desc">Go to <strong>last line</strong> of file</div></div>
+      <div class="row"><kbd class="yellow">42G</kbd><div class="desc">Jump to <strong>line 42</strong> (any number)</div></div>
+      <div class="row"><kbd>Ctrl+d</kbd><div class="desc">Scroll <strong>half page down</strong></div></div>
+      <div class="row"><kbd>Ctrl+u</kbd><div class="desc">Scroll <strong>half page up</strong></div></div>
+      <div class="row"><kbd>Ctrl+f</kbd><div class="desc">Scroll full page forward</div></div>
+      <div class="row"><kbd>Ctrl+b</kbd><div class="desc">Scroll full page backward</div></div>
+      <div class="row"><kbd>zz</kbd><div class="desc">Center screen on cursor</div></div>
+      <div class="row"><kbd>zt</kbd><div class="desc">Scroll cursor to top</div></div>
+      <div class="row"><kbd>zb</kbd><div class="desc">Scroll cursor to bottom</div></div>
+      <div class="subsection">Character Jump</div>
+      <div class="row"><kbd class="yellow">f{c}</kbd><div class="desc"><strong>Find</strong> char forward on line</div></div>
+      <div class="row"><kbd class="yellow">F{c}</kbd><div class="desc">Find char <strong>backward</strong> on line</div></div>
+      <div class="row"><kbd class="yellow">t{c}</kbd><div class="desc">Jump <strong>before</strong> char (till)</div></div>
+      <div class="row"><kbd>;</kbd><div class="desc">Repeat last f/t/F/T</div></div>
+      <div class="row"><kbd>,</kbd><div class="desc">Reverse last f/t/F/T</div></div>
+      <div class="row"><kbd>%</kbd><div class="desc">Jump to matching <strong>bracket/paren</strong></div></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 2 ROW 1 — EDITING -->
+  <div class="card cat-edit">
+    <div class="card-header">
+      <div class="card-icon">✏️</div>
+      <div class="card-title">Editing & Operators</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Undo / Redo</div>
+      <div class="row"><kbd>u</kbd><div class="desc"><strong>Undo</strong> last change</div></div>
+      <div class="row"><kbd>Ctrl+r</kbd><div class="desc"><strong>Redo</strong> undone change</div></div>
+      <div class="row"><kbd>U</kbd><div class="desc">Undo all changes on current line</div></div>
+      <div class="subsection">Delete</div>
+      <div class="row"><kbd>x</kbd><div class="desc">Delete character <strong>under cursor</strong></div></div>
+      <div class="row"><kbd>X</kbd><div class="desc">Delete character <strong>before</strong> cursor</div></div>
+      <div class="row"><kbd>dd</kbd><div class="desc">Delete <strong>entire line</strong></div></div>
+      <div class="row"><kbd class="yellow">5dd</kbd><div class="desc">Delete <strong>5 lines</strong> (any count)</div></div>
+      <div class="row"><kbd>dw</kbd><div class="desc">Delete to end of word</div></div>
+      <div class="row"><kbd>d$</kbd><div class="desc">Delete to end of line</div></div>
+      <div class="row"><kbd>d0</kbd><div class="desc">Delete to start of line</div></div>
+      <div class="row"><kbd>dG</kbd><div class="desc">Delete to end of file</div></div>
+      <div class="subsection">Change (delete + insert)</div>
+      <div class="row"><kbd>cc</kbd><div class="desc">Change <strong>entire line</strong></div></div>
+      <div class="row"><kbd>cw</kbd><div class="desc">Change word</div></div>
+      <div class="row"><kbd>c$</kbd><div class="desc">Change to end of line (same as C)</div></div>
+      <div class="row"><kbd>C</kbd><div class="desc">Change from cursor to end of line</div></div>
+      <div class="row"><kbd>s</kbd><div class="desc">Substitute char under cursor</div></div>
+      <div class="row"><kbd>S</kbd><div class="desc">Substitute entire line</div></div>
+      <div class="subsection">Copy (Yank) & Paste</div>
+      <div class="row"><kbd>yy</kbd><div class="desc"><strong>Yank (copy) line</strong></div></div>
+      <div class="row"><kbd class="yellow">5yy</kbd><div class="desc">Yank <strong>5 lines</strong></div></div>
+      <div class="row"><kbd>yw</kbd><div class="desc">Yank word</div></div>
+      <div class="row"><kbd>y$</kbd><div class="desc">Yank to end of line</div></div>
+      <div class="row"><kbd>p</kbd><div class="desc">Paste <strong>after</strong> cursor/line</div></div>
+      <div class="row"><kbd>P</kbd><div class="desc">Paste <strong>before</strong> cursor/line</div></div>
+      <div class="subsection">Replace & Transform</div>
+      <div class="row"><kbd class="yellow">r{c}</kbd><div class="desc"><strong>Replace</strong> one char (no insert mode)</div></div>
+      <div class="row"><kbd>R</kbd><div class="desc">Enter <strong>replace mode</strong></div></div>
+      <div class="row"><kbd>~</kbd><div class="desc">Toggle case of character</div></div>
+      <div class="row"><kbd>gUw</kbd><div class="desc">Uppercase word</div></div>
+      <div class="row"><kbd>guw</kbd><div class="desc">Lowercase word</div></div>
+      <div class="row"><kbd>J</kbd><div class="desc"><strong>Join</strong> line below with current</div></div>
+      <div class="row"><kbd>.</kbd><div class="desc"><strong>Repeat</strong> last change — very useful!</div></div>
+      <div class="subsection">Indent</div>
+      <div class="row"><kbd>&gt;&gt;</kbd><div class="desc"><strong>Indent</strong> line right</div></div>
+      <div class="row"><kbd>&lt;&lt;</kbd><div class="desc"><strong>Indent</strong> line left</div></div>
+      <div class="row"><kbd>=G</kbd><div class="desc">Auto-indent to end of file</div></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 3 ROW 1 — INSERT -->
+  <div class="card cat-insert">
+    <div class="card-header">
+      <div class="card-icon">⌨️</div>
+      <div class="card-title">Insert Mode Entry</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Entering Insert Mode</div>
+      <div class="row"><kbd class="insert">i</kbd><div class="desc">Insert <strong>before</strong> cursor</div></div>
+      <div class="row"><kbd class="insert">I</kbd><div class="desc">Insert at <strong>line start</strong></div></div>
+      <div class="row"><kbd class="insert">a</kbd><div class="desc">Append <strong>after</strong> cursor</div></div>
+      <div class="row"><kbd class="insert">A</kbd><div class="desc">Append at <strong>end of line</strong></div></div>
+      <div class="row"><kbd class="insert">o</kbd><div class="desc">Open <strong>new line below</strong></div></div>
+      <div class="row"><kbd class="insert">O</kbd><div class="desc">Open <strong>new line above</strong></div></div>
+      <div class="row"><kbd class="insert">ea</kbd><div class="desc">Append at <strong>end of word</strong></div></div>
+      <div class="subsection">Exiting Insert Mode</div>
+      <div class="row"><kbd>Esc</kbd><div class="desc">Return to <strong>Normal mode</strong></div></div>
+      <div class="row"><kbd>Ctrl+[</kbd><div class="desc">Same as Esc (alternative)</div></div>
+      <div class="row"><kbd>Ctrl+c</kbd><div class="desc">Abort insert (no autocommands)</div></div>
+      <div class="subsection">While in Insert Mode</div>
+      <div class="row"><kbd class="insert">Ctrl+h</kbd><div class="desc">Delete char before cursor</div></div>
+      <div class="row"><kbd class="insert">Ctrl+w</kbd><div class="desc">Delete word before cursor</div></div>
+      <div class="row"><kbd class="insert">Ctrl+u</kbd><div class="desc">Delete to line start</div></div>
+      <div class="row"><kbd class="insert">Ctrl+t</kbd><div class="desc">Indent current line</div></div>
+      <div class="row"><kbd class="insert">Ctrl+d</kbd><div class="desc">Un-indent current line</div></div>
+      <div class="row"><kbd class="insert">Ctrl+n</kbd><div class="desc"><strong>Autocomplete</strong> (next match)</div></div>
+      <div class="row"><kbd class="insert">Ctrl+p</kbd><div class="desc">Autocomplete (previous match)</div></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 1 ROW 2 — VISUAL -->
+  <div class="card cat-visual">
+    <div class="card-header">
+      <div class="card-icon">🔲</div>
+      <div class="card-title">Visual Mode & Selection</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Enter Visual Mode</div>
+      <div class="row"><kbd class="visual">v</kbd><div class="desc"><strong>Character-wise</strong> visual select</div></div>
+      <div class="row"><kbd class="visual">V</kbd><div class="desc"><strong>Line-wise</strong> visual select</div></div>
+      <div class="row"><kbd class="visual">Ctrl+v</kbd><div class="desc"><strong>Block/column</strong> visual select</div></div>
+      <div class="subsection">In Visual Mode</div>
+      <div class="row"><kbd class="visual">o</kbd><div class="desc">Move to <strong>other end</strong> of selection</div></div>
+      <div class="row"><kbd class="visual">aw</kbd><div class="desc">Select <strong>a word</strong> (with spaces)</div></div>
+      <div class="row"><kbd class="visual">iw</kbd><div class="desc">Select <strong>inner word</strong></div></div>
+      <div class="row"><kbd class="visual">ab</kbd><div class="desc">Select block with <strong>( )</strong></div></div>
+      <div class="row"><kbd class="visual">ib</kbd><div class="desc">Select <strong>inside ( )</strong></div></div>
+      <div class="row"><kbd class="visual">aB</kbd><div class="desc">Select block with <strong>{ }</strong></div></div>
+      <div class="subsection">Actions on Selection</div>
+      <div class="row"><kbd class="visual">d</kbd><div class="desc">Delete selection</div></div>
+      <div class="row"><kbd class="visual">y</kbd><div class="desc">Yank (copy) selection</div></div>
+      <div class="row"><kbd class="visual">c</kbd><div class="desc">Change selection</div></div>
+      <div class="row"><kbd class="visual">></kbd><div class="desc">Indent selection right</div></div>
+      <div class="row"><kbd class="visual"><</kbd><div class="desc">Indent selection left</div></div>
+      <div class="row"><kbd class="visual">~</kbd><div class="desc">Toggle case of selection</div></div>
+      <div class="row"><kbd class="visual">U</kbd><div class="desc">Uppercase selection</div></div>
+      <div class="row"><kbd class="visual">u</kbd><div class="desc">Lowercase selection</div></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 2 ROW 2 — SEARCH & REPLACE -->
+  <div class="card cat-search">
+    <div class="card-header">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Search & Replace</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Search</div>
+      <div class="row"><kbd class="yellow">/{pattern}</kbd><div class="desc">Search <strong>forward</strong> for pattern</div></div>
+      <div class="row"><kbd class="yellow">?{pattern}</kbd><div class="desc">Search <strong>backward</strong> for pattern</div></div>
+      <div class="row"><kbd>n</kbd><div class="desc">Next match <strong>(same direction)</strong></div></div>
+      <div class="row"><kbd>N</kbd><div class="desc">Previous match (opposite direction)</div></div>
+      <div class="row"><kbd>*</kbd><div class="desc">Search word <strong>under cursor</strong> (forward)</div></div>
+      <div class="row"><kbd>#</kbd><div class="desc">Search word under cursor (backward)</div></div>
+      <div class="row"><kbd>gd</kbd><div class="desc">Go to local <strong>definition</strong></div></div>
+      <div class="subsection">Substitute (Replace)</div>
+      <div class="row"><kbd class="cmd">:s/old/new</kbd><div class="desc">Replace <strong>first</strong> on current line</div></div>
+      <div class="row"><kbd class="cmd">:s/old/new/g</kbd><div class="desc">Replace <strong>all</strong> on current line</div></div>
+      <div class="row"><kbd class="cmd">:%s/old/new/g</kbd><div class="desc">Replace all in <strong>entire file</strong></div></div>
+      <div class="row"><kbd class="cmd">:%s/old/new/gc</kbd><div class="desc">Replace all with <strong>confirmation</strong></div></div>
+      <div class="row"><kbd class="cmd">:5,12s/old/new/g</kbd><div class="desc">Replace in <strong>line range 5–12</strong></div></div>
+      <div class="subsection">Search Options</div>
+      <div class="row"><kbd class="cmd">:set hlsearch</kbd><div class="desc">Highlight all search matches</div></div>
+      <div class="row"><kbd class="cmd">:noh</kbd><div class="desc"><strong>Clear</strong> search highlighting</div></div>
+      <div class="row"><kbd class="cmd">:set ignorecase</kbd><div class="desc">Case-insensitive search</div></div>
+      <div class="row"><kbd class="cmd">:set incsearch</kbd><div class="desc">Incremental (live) search</div></div>
+      <div class="tip">💡 <span>Use <kbd class="yellow">\c</kbd> in pattern for case-insensitive: <kbd>/foo\c</kbd></span></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 3 ROW 2 — FILE/BUFFER -->
+  <div class="card cat-file">
+    <div class="card-header">
+      <div class="card-icon">💾</div>
+      <div class="card-title">Files, Buffers & Tabs</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Save & Quit</div>
+      <div class="row"><kbd class="cmd">:w</kbd><div class="desc"><strong>Write</strong> (save) file</div></div>
+      <div class="row"><kbd class="cmd">:w file</kbd><div class="desc">Save to <strong>new filename</strong></div></div>
+      <div class="row"><kbd class="cmd">:q</kbd><div class="desc"><strong>Quit</strong> (fails if unsaved)</div></div>
+      <div class="row"><kbd class="cmd">:q!</kbd><div class="desc">Quit and <strong>discard changes</strong></div></div>
+      <div class="row"><kbd class="cmd">:wq</kbd><div class="desc">Save and quit</div></div>
+      <div class="row"><kbd class="cmd">:x</kbd><div class="desc">Save (only if changed) and quit</div></div>
+      <div class="row"><kbd>ZZ</kbd><div class="desc">Save and quit (Normal mode)</div></div>
+      <div class="row"><kbd>ZQ</kbd><div class="desc">Quit without saving</div></div>
+      <div class="subsection">Open & Reload</div>
+      <div class="row"><kbd class="cmd">:e file</kbd><div class="desc">Open / <strong>edit</strong> a file</div></div>
+      <div class="row"><kbd class="cmd">:e!</kbd><div class="desc"><strong>Reload</strong> file (discard edits)</div></div>
+      <div class="row"><kbd class="cmd">:r file</kbd><div class="desc"><strong>Insert</strong> file contents below</div></div>
+      <div class="subsection">Buffers</div>
+      <div class="row"><kbd class="cmd">:ls</kbd><div class="desc">List open <strong>buffers</strong></div></div>
+      <div class="row"><kbd class="cmd">:bn</kbd><div class="desc">Next buffer</div></div>
+      <div class="row"><kbd class="cmd">:bp</kbd><div class="desc">Previous buffer</div></div>
+      <div class="row"><kbd class="cmd">:b3</kbd><div class="desc">Go to buffer number 3</div></div>
+      <div class="row"><kbd class="cmd">:bd</kbd><div class="desc">Delete (close) buffer</div></div>
+      <div class="subsection">Tabs</div>
+      <div class="row"><kbd class="cmd">:tabnew</kbd><div class="desc">Open a <strong>new tab</strong></div></div>
+      <div class="row"><kbd>gt</kbd><div class="desc">Next tab</div></div>
+      <div class="row"><kbd>gT</kbd><div class="desc">Previous tab</div></div>
+      <div class="row"><kbd class="cmd">:tabclose</kbd><div class="desc">Close current tab</div></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 1 ROW 3 — WINDOWS/SPLITS -->
+  <div class="card cat-window">
+    <div class="card-header">
+      <div class="card-icon">🪟</div>
+      <div class="card-title">Windows & Splits</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Split Windows</div>
+      <div class="row"><kbd class="cmd">:sp</kbd><div class="desc">Split <strong>horizontal</strong> (same file)</div></div>
+      <div class="row"><kbd class="cmd">:vsp</kbd><div class="desc">Split <strong>vertical</strong> (same file)</div></div>
+      <div class="row"><kbd class="cmd">:sp file</kbd><div class="desc">Open file in horizontal split</div></div>
+      <div class="row"><kbd class="cmd">:vsp file</kbd><div class="desc">Open file in vertical split</div></div>
+      <div class="subsection">Navigate Splits</div>
+      <div class="row"><kbd>Ctrl+w h</kbd><div class="desc">Focus split to the <strong>left</strong></div></div>
+      <div class="row"><kbd>Ctrl+w l</kbd><div class="desc">Focus split to the <strong>right</strong></div></div>
+      <div class="row"><kbd>Ctrl+w j</kbd><div class="desc">Focus split <strong>below</strong></div></div>
+      <div class="row"><kbd>Ctrl+w k</kbd><div class="desc">Focus split <strong>above</strong></div></div>
+      <div class="row"><kbd>Ctrl+w w</kbd><div class="desc">Cycle through all splits</div></div>
+      <div class="subsection">Resize Splits</div>
+      <div class="row"><kbd>Ctrl+w +</kbd><div class="desc">Increase height</div></div>
+      <div class="row"><kbd>Ctrl+w -</kbd><div class="desc">Decrease height</div></div>
+      <div class="row"><kbd>Ctrl+w =</kbd><div class="desc"><strong>Equalize</strong> all split sizes</div></div>
+      <div class="row"><kbd class="cmd">:close</kbd><div class="desc">Close current split</div></div>
+      <div class="row"><kbd class="cmd">:only</kbd><div class="desc">Close all <strong>other</strong> splits</div></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 2 ROW 3 — MACROS & REGISTERS -->
+  <div class="card cat-macro">
+    <div class="card-header">
+      <div class="card-icon">🎙️</div>
+      <div class="card-title">Macros & Registers</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Recording Macros</div>
+      <div class="row"><kbd class="yellow">q{a}</kbd><div class="desc"><strong>Start recording</strong> macro to register a–z</div></div>
+      <div class="row"><kbd>q</kbd><div class="desc"><strong>Stop recording</strong> macro</div></div>
+      <div class="row"><kbd class="yellow">@{a}</kbd><div class="desc"><strong>Play</strong> macro from register</div></div>
+      <div class="row"><kbd>@@</kbd><div class="desc">Replay <strong>last</strong> macro</div></div>
+      <div class="row"><kbd class="yellow">5@a</kbd><div class="desc">Run macro <strong>5 times</strong></div></div>
+      <div class="subsection">Registers</div>
+      <div class="row"><kbd class="yellow">"{a}y</kbd><div class="desc">Yank into register <strong>a</strong></div></div>
+      <div class="row"><kbd class="yellow">"{a}p</kbd><div class="desc">Paste from register <strong>a</strong></div></div>
+      <div class="row"><kbd class="cmd">:reg</kbd><div class="desc">Show all <strong>register contents</strong></div></div>
+      <div class="row"><kbd>"0p</kbd><div class="desc">Paste from <strong>yank register</strong></div></div>
+      <div class="row"><kbd>"+y</kbd><div class="desc">Copy to <strong>system clipboard</strong></div></div>
+      <div class="row"><kbd>"+p</kbd><div class="desc">Paste from <strong>system clipboard</strong></div></div>
+      <div class="tip">💡 <span>In gvim, Ctrl+C / Ctrl+V work for clipboard too via menu</span></div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 3 ROW 3 — COMMAND LINE + MISC -->
+  <div class="card cat-misc">
+    <div class="card-header">
+      <div class="card-icon">⚙️</div>
+      <div class="card-title">Commands, Settings & Marks</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">Useful Settings</div>
+      <div class="row"><kbd class="cmd">:set number</kbd><div class="desc">Show <strong>line numbers</strong></div></div>
+      <div class="row"><kbd class="cmd">:set relativenumber</kbd><div class="desc">Relative line numbers</div></div>
+      <div class="row"><kbd class="cmd">:set syntax=on</kbd><div class="desc"><strong>Syntax highlighting</strong> on</div></div>
+      <div class="row"><kbd class="cmd">:set tabstop=4</kbd><div class="desc">Tab width = 4 spaces</div></div>
+      <div class="row"><kbd class="cmd">:set expandtab</kbd><div class="desc">Use spaces instead of tabs</div></div>
+      <div class="row"><kbd class="cmd">:set wrap</kbd><div class="desc">Wrap long lines</div></div>
+      <div class="row"><kbd class="cmd">:set nowrap</kbd><div class="desc">Disable line wrapping</div></div>
+      <div class="row"><kbd class="cmd">:colorscheme desert</kbd><div class="desc">Change color theme</div></div>
+      <div class="subsection">Marks</div>
+      <div class="row"><kbd class="yellow">m{a}</kbd><div class="desc"><strong>Set mark</strong> at cursor (a–z)</div></div>
+      <div class="row"><kbd class="yellow">`{a}</kbd><div class="desc">Jump to exact mark position</div></div>
+      <div class="row"><kbd class="yellow">'{a}</kbd><div class="desc">Jump to mark's <strong>line start</strong></div></div>
+      <div class="row"><kbd>``</kbd><div class="desc">Jump to <strong>previous position</strong></div></div>
+      <div class="row"><kbd>:marks</kbd><div class="desc">List all marks</div></div>
+      <div class="subsection">Misc Commands</div>
+      <div class="row"><kbd class="cmd">:help {topic}</kbd><div class="desc">Open <strong>help</strong> for topic</div></div>
+      <div class="row"><kbd class="cmd">:version</kbd><div class="desc">Show vim version info</div></div>
+      <div class="row"><kbd class="cmd">:!</kbd><div class="desc">Run a shell command</div></div>
+      <div class="row"><kbd>Ctrl+g</kbd><div class="desc">Show filename and position</div></div>
+      <div class="row"><kbd>ga</kbd><div class="desc">Show ASCII value of char</div></div>
+    </div>
+  </div>
+
+  <!-- ░░ FULL WIDTH — GOLDEN RULES -->
+  <div class="card span2" style="grid-column: 1 / 3; background: linear-gradient(135deg, #0d1520, #111827); border-color: #2a3a55;">
+    <div class="card-header" style="background: transparent;">
+      <div class="card-icon" style="background: #1a2535; color: #60a5fa;">🌟</div>
+      <div class="card-title" style="color: #60a5fa;">Operator + Motion — The Grammar of Vim</div>
+    </div>
+    <div class="card-body">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px 24px;">
+        <div>
+          <div class="subsection" style="color: #60a5fa;">Pattern: <span style="font-family: JetBrains Mono, monospace; font-size: 12px;">[count] operator [motion]</span></div>
+          <div class="row"><kbd class="blue">d2w</kbd><div class="desc">Delete <strong>2 words</strong> forward</div></div>
+          <div class="row"><kbd class="blue">y3j</kbd><div class="desc">Yank current + <strong>3 lines down</strong></div></div>
+          <div class="row"><kbd class="blue">c$</kbd><div class="desc">Change from cursor to <strong>end of line</strong></div></div>
+          <div class="row"><kbd class="blue">gU3w</kbd><div class="desc">Uppercase <strong>next 3 words</strong></div></div>
+        </div>
+        <div>
+          <div class="subsection" style="color: #60a5fa;">Text Objects — <span style="font-family: JetBrains Mono, monospace; font-size: 12px;">a = with surroundings, i = inner</span></div>
+          <div class="row"><kbd class="blue">di"</kbd><div class="desc">Delete text <strong>inside quotes</strong> "..."</div></div>
+          <div class="row"><kbd class="blue">ca(</kbd><div class="desc">Change a (including) <strong>parentheses</strong></div></div>
+          <div class="row"><kbd class="blue">yi{</kbd><div class="desc">Yank inside <strong>curly braces</strong></div></div>
+          <div class="row"><kbd class="blue">vit</kbd><div class="desc">Visually select inside <strong>HTML tag</strong></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ░░ COL 3 — GVIM SPECIFIC -->
+  <div class="card cat-cmd" style="grid-column: 3;">
+    <div class="card-header">
+      <div class="card-icon">🖥️</div>
+      <div class="card-title">GVim-Only Features</div>
+    </div>
+    <div class="card-body">
+      <div class="subsection">GVim GUI</div>
+      <div class="row"><kbd class="cmd">Ctrl+F</kbd><div class="desc">Open Find/Replace <strong>dialog</strong></div></div>
+      <div class="row"><kbd class="cmd">Ctrl+S</kbd><div class="desc">Save file (GUI shortcut)</div></div>
+      <div class="row"><kbd class="cmd">Ctrl+Z</kbd><div class="desc">Undo (GUI shortcut)</div></div>
+      <div class="row"><kbd class="cmd">:set guifont=*</kbd><div class="desc">Open <strong>font picker</strong> dialog</div></div>
+      <div class="row"><kbd class="cmd">:set guifont=Courier:h14</kbd><div class="desc">Set font and size</div></div>
+      <div class="row"><kbd class="cmd">:set lines=40 columns=100</kbd><div class="desc">Set window dimensions</div></div>
+      <div class="subsection">Mouse Support</div>
+      <div class="row"><kbd class="cmd">:set mouse=a</kbd><div class="desc">Enable mouse in <strong>all modes</strong></div></div>
+      <div class="row"><kbd>Right-click</kbd><div class="desc">Context menu in gvim</div></div>
+      <div class="tip">💡 <span>gvim uses <kbd>~/.gvimrc</kbd> for GUI settings</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-brand">GVIM CHEATSHEET</div>
+  <div>Press <kbd>Esc</kbd> to return to Normal Mode • <kbd>:help</kbd> for documentation • <kbd>:q!</kbd> to exit without saving</div>
+  <div>Custom Analog Layout Course</div>
+</div>
+
+</body>
+</html>
